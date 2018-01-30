@@ -12,6 +12,7 @@ ES_DOCTYPE = 'ddos_report'
 #Not everyone uses or wants this so it's disabled by default
 EXPORT_TRAFFIC_SAMPLE = False
 ES_TRAFFIC_SAMPLE_INDEX = "FNM_traffic_sample"
+ES_TRAFFIC_SAMPLE_INDEX_TYPE = "fnm_traffic_sample"
 
 #SLACK VARIABLES
 #If you want to receive SLACK alerts, it's based on Pavel's notify script, does the same thing
