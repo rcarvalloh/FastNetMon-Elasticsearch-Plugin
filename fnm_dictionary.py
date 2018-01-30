@@ -44,7 +44,7 @@ main_attribute = {
 }
 
 #Naming for the traffic sample regex captured groups
-trafic_sample = {
+traffic_sample = {
 1: 'date', 
 3: 'time', 
 5: 'src_ip', 
