@@ -24,3 +24,6 @@ DETAILS_TO_SLACK = True
 #FastNetMon arguments
 FNM_NETWORK_ACCOUNTING = False
 
+#GeoDB config
+CITY_GEO_DB = "geoipdbs/GeoLite2-City.mmdb"
+ASN_GEO_DB = "geoipdbs/GeoLite2-ASN.mmdb"

@@ -4,7 +4,7 @@
 #Important!!! You need to make sure you're pointing to your python exec...
 #
 
-import requests, sys, datetime, json, re
+import requests, sys, datetime, json, re, geoip2.database
 from elasticsearch import Elasticsearch, helpers
 import fnm_dictionary, config, test_data
 
@@ -37,10 +37,14 @@ def process_fnm_main(report):
 
 def process_fnm_traffic(report, timestamp, main_info_id):
    reportList = []
+   #initializing geodb readers
+   city_reader = geoip2.database.Reader(config.CITY_GEO_DB)
+   asn_reader = geoip2.database.Reader(config.ASN_GEO_DB)
+
    #Regex for the traffic sample matcher
    trf_sample_regex = re.compile(r"^((-*\d{2,4}){3}) ((:*\d{2}){3}.\d+) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d+) > (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d+) protocol: ([a-z]+) frag: (\d+)  packets: (\d+) size: (\d+) bytes ttl: (\d+) sample ratio: (\d+)$")
    for line in report:
-      #bad way to manage errors on regex but this is only provisional
+      #bad way to manage empty lines on regex but this is only provisional
       if line == "": continue
       reportDict = {}
       #we stamp timestamp information in UTC along with information about the index used to store main info data
@@ -48,11 +52,27 @@ def process_fnm_traffic(report, timestamp, main_info_id):
       reportDict['timestamp'] = timestamp
       reportDict['attack_id'] = main_info_id
       line_proc = trf_sample_regex.match(line)
+
       for key in fnm_dictionary.traffic_sample:
-         if key in [10, 11, 12, 13, 14]: val = int(line_proc.group(key))
-         else: val = line_proc.group(key)
-         reportDict[ fnm_dictionary.traffic_sample[key] ] = val
+         reportDict[ fnm_dictionary.traffic_sample[key] ] = is_value_int(line_proc.group(key))
+
+      #appending geodb data
+      #ASN
+      reportDict['src_asn'] = asn_reader.asn(reportDict['src_ip']).autonomous_system_number
+      reportDict['src_asn_name'] = asn_reader.asn(reportDict['src_ip']).autonomous_system_organization
+      reportDict['dst_asn'] = asn_reader.asn(reportDict['dst_ip']).autonomous_system_number
+      reportDict['dst_asn_name'] = asn_reader.asn(reportDict['dst_ip']).autonomous_system_organization
+      #Country and city
+      reportDict['src_country'] = city_reader.city(reportDict['src_ip']).country.name
+      reportDict['src_city'] = city_reader.city(reportDict['src_ip']).city.name
+      reportDict['dst_country'] = city_reader.city(reportDict['dst_ip']).country.name
+      reportDict['dst_city'] = city_reader.city(reportDict['dst_ip']).city.name
+
       reportList.append(reportDict)
+
+   city_reader.close()
+   asn_reader.close()
+
    return reportList
 
 def update_es_index():
