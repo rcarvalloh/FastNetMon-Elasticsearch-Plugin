@@ -5,7 +5,7 @@
 #
 
 import requests, sys, datetime, json, re
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, helpers
 import fnm_dictionary, config
 
 #FastNetMon arguments 
@@ -77,7 +77,8 @@ def update_es_index():
    #now if we want the traffic report we get those details sorted as well
    if config.ES_EXPORT_TRAFFIC_SAMPLE == True:
       main_info_id = json.loads(response.text)['id']
-      traffic_info = process_fnm_traffic(traffic_sample.split(\n), timestamp, main_info_id)  
+      traffic_info = process_fnm_traffic(traffic_sample.split(\n), timestamp, main_info_id) 
+      helpers.bulk(es_conn, traffic_info, index=config.ES_TRAFFIC_SAMPLE_INDEX, doc_type=config.ES_TRAFFIC_SAMPLE_INDEX_TYPE)
       
 #Function to notify via SLACK
 def notify_via_slack():
