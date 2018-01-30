@@ -10,7 +10,7 @@ ES_PASSWORD = None
 ES_DOCTYPE = 'ddos_report'
 #Due to the amount of information, this is saved in a different table and we relate it to an attack using and ID
 #Not everyone uses or wants this so it's disabled by default
-EXPORT_TRAFFIC_SAMPLE = False
+ES_EXPORT_TRAFFIC_SAMPLE = False
 ES_TRAFFIC_SAMPLE_INDEX = "FNM_traffic_sample"
 ES_TRAFFIC_SAMPLE_INDEX_TYPE = "fnm_traffic_sample"
 
