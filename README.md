@@ -28,4 +28,4 @@ This script is still being tested and there's a lot to be done
 
 
 *This product includes GeoLite2 data created by MaxMind, available from
-<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+<a href="http://www.maxmind.com">http://www.maxmind.com</a>.*
