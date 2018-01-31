@@ -1,13 +1,14 @@
 # FastNetMon-Elasticsearch-Plugin
 Small plugin to allow storage of FastNetMon reported data to ES, also includes the SLACK notification functionality
 ####
-*Work in progress*
+__*Work in progress*__
 ####
 
 I wanted to be able to store FNM report data and traffic samples to ES so I could create graphical reports easily using Kibana-
 This program allows to store reports from FastNetMon towards an Elasticsearch cluster. It's just a callable script, when there's an attack it's called and it extracts all the data FNM produces, then it parses the data and stores it on ES.
 
 **Installation**
+
 1.- Python3 is required
 
 2.- Install Elasticsearch and geoip2 from pip
