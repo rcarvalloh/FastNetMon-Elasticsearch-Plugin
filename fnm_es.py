@@ -6,8 +6,7 @@
 
 import requests, sys, datetime, json, re, geoip2.database
 from elasticsearch import Elasticsearch, helpers
-import fnm_dictionary, config, test_data
-
+import fnm_dictionary, config
 #FastNetMon arguments
 
 fnm_client_ip = sys.argv[1]
